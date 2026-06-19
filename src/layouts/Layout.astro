@@ -1,23 +1,62 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = '이정우의 블로그',
+	description = '개발하며 배운 것들을 기록합니다.',
+} = Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta name="description" content={description} />
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
 
-<style>
+<style is:global>
+	:root {
+		--max-width: 720px;
+		--text: #1a1a1a;
+		--muted: #666;
+		--bg: #ffffff;
+		--border: #e5e5e5;
+		--font-sans:
+			-apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', Roboto,
+			'Helvetica Neue', Arial, sans-serif;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
 	html,
 	body {
 		margin: 0;
-		width: 100%;
-		height: 100%;
+		padding: 0;
+	}
+
+	body {
+		font-family: var(--font-sans);
+		color: var(--text);
+		background: var(--bg);
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+	}
+
+	a {
+		color: inherit;
 	}
 </style>
