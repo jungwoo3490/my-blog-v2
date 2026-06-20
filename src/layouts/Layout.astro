@@ -1,13 +1,10 @@
 ---
 interface Props {
-	title?: string;
-	description?: string;
+	title: string;
+	description: string;
 }
 
-const {
-	title = '이정우의 블로그',
-	description = '개발하며 배운 것들을 기록합니다.',
-} = Astro.props;
+const { title, description } = Astro.props;
 ---
 
 <!doctype html>
