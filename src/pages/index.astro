@@ -1,18 +1,113 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import BlogCard from '../components/BlogCard.astro';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime(),
+);
+
+const filters = ['ALL', 'DEV', 'ETC'] as const;
 ---
 
 <Layout>
 	<main>
-		<h1>이정우의 블로그</h1>
-		<p>곧 글이 올라옵니다.</p>
+		<header class="head">
+			<h1>이정우의 블로그</h1>
+			<p>개발하며 배운 것들을 기록합니다.</p>
+		</header>
+
+		<nav class="filters">
+			{
+				filters.map((f) => (
+					<button
+						class="filter-chip"
+						class:list={[{ active: f === 'ALL' }]}
+						data-filter={f}
+					>
+						{f === 'ALL' ? '전체' : f}
+					</button>
+				))
+			}
+		</nav>
+
+		<div class="grid">
+			{posts.map((post) => <BlogCard post={post} />)}
+		</div>
 	</main>
 </Layout>
 
+<script>
+	const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
+	const cards = document.querySelectorAll<HTMLAnchorElement>('.card');
+
+	chips.forEach((chip) => {
+		chip.addEventListener('click', () => {
+			const filter = chip.dataset.filter;
+			chips.forEach((c) => c.classList.toggle('active', c === chip));
+			cards.forEach((card) => {
+				const match = filter === 'ALL' || card.dataset.category === filter;
+				card.style.display = match ? '' : 'none';
+			});
+		});
+	});
+</script>
+
 <style>
 	main {
-		max-width: var(--max-width);
+		max-width: 1000px;
 		margin: 0 auto;
-		padding: 4rem 1.5rem;
+		padding: 3.5rem 1.5rem;
+	}
+
+	.head h1 {
+		font-size: 1.8rem;
+		font-weight: 800;
+		margin: 0 0 0.5rem;
+	}
+
+	.head p {
+		color: var(--muted);
+		margin: 0;
+	}
+
+	.filters {
+		display: flex;
+		gap: 0.5rem;
+		margin: 2rem 0;
+		flex-wrap: wrap;
+	}
+
+	.filter-chip {
+		font-family: inherit;
+		font-size: 0.85rem;
+		font-weight: 600;
+		padding: 0.4rem 0.9rem;
+		border-radius: 999px;
+		border: 1px solid var(--border);
+		background: var(--bg);
+		color: var(--muted);
+		cursor: pointer;
+		transition:
+			background 0.15s ease,
+			color 0.15s ease,
+			border-color 0.15s ease;
+	}
+
+	.filter-chip:hover {
+		border-color: var(--text);
+		color: var(--text);
+	}
+
+	.filter-chip.active {
+		background: var(--text);
+		color: var(--bg);
+		border-color: var(--text);
+	}
+
+	.grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1.5rem;
 	}
 </style>

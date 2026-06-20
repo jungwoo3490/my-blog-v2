@@ -16,7 +16,7 @@ const formattedDate = pubDate.toLocaleDateString('ko-KR', {
 });
 ---
 
-<a class="card" href={`/blog/${post.id}`}>
+<a class="card" href={`/blog/${post.id}`} data-category={category}>
 	<div class="thumb">
 		<Image src={thumbnail} alt={title} width={600} height={315} />
 	</div>
